@@ -1,0 +1,93 @@
+
+{% extends 'base.html'%}
+    {% block content%}
+    {% comment %} <section id="hero" class="d-flex align-items-center"> {% endcomment %}
+    <section class="d-flex align-items-center">
+        <div class="container text-center">
+            <form>
+                <div class="mb-2">
+                    <h1>Calculadora de promedios </h1>
+                    
+                    
+                    <div class="col s11">
+                        <label for="numero_semestres" class="form-label">Nota 1</label>
+                        <input type="number" class="input-field col s6" id="nota1" min="0" max="5" step="0.01" required>
+                        <label for="numero_semestres" class="form-label">Porcentaje</label>
+                        <input type="number" class="input-field col s6" id="per1" min="1" max="100" required>
+
+                    </div>
+                    <div class="mb-2">
+                        <label for="numero_semestres" class="form-label">Nota 2</label>
+                        <input type="number" class="input-field col s6" id="nota2" min="0" max="5" step="0.01" required>
+                        <label for="numero_semestres" class="form-label">Porcentaje</label>
+                        <input type="number" class="input-field col s4" id="per2" min="1" max="100" required>
+                    </div>
+                    <script>
+
+                    </script>
+                    <button type="submit" class="btn btn-info" onclick="calcularPromedio()">Calcular</button>
+                    <h1 id="respuesta"></h1>
+                    <button type="button" class="btn btn-info" id="añadirCampo" onclick="añadirCampo()"> Añadir campo</button>
+
+                    {% if user.is_authenticated %}
+                    <div>
+                        <br> <a href="{% url 'crearmateria' user.id %}"class="btn btn-primary">Agregar Materia</a></div>
+                        {% endif %}
+                    
+                    <hr>
+                    <h3>Materias</h3>
+                    <ul class="list-group">
+                        {% for materia in materias %}
+                        {% if user.is_authenticated and user == materia.user %}
+                        <li class="list-group-item pb-3 pt-3">
+                            {% comment %} <h5 class="card-title"> <a href="{% url '' %}"> {{ materia.nombreMateria }} </a> </h5> {% endcomment %}
+                            <h5 class="card-title"><a href="{% url 'materia' %}">{{ materia.nombreMateria }}</a></h5>
+                            <p class="card-text">Profesor: {{ materia.nombreProfesor }}</p>
+                            <p class="card-text">Semestre: {{ materia.semestre }} || Creditos: {{materia.cantCreditos}}</p>
+                            <a class="btn btn-primary me-2" href="{% url 'actualizarmateria' user.id materia.id %}">Actualizar</a>
+                            <a class="btn btn-danger" href="{% url 'eliminarmateria' user.id materia.id %}">Eliminar</a>
+
+                        </li>
+                        
+                        {% else %}
+                        <h1>Acceso denegado</h1>
+                        
+                        
+                        {% comment %} <li class="list-group-item pb-3 pt-3">
+                            <h5 class="card-title">
+                                Materia: {{ materia.nombreMateria }}
+                            </h5>
+                            
+                            <p class="card-text">{{ review.text }}</p>
+                            
+                                <a class="btn btn-primary me-2" href="#">Update</a>
+                                <a class="btn btn-danger" href="#">Delete</a> {% endcomment %}
+
+                            {% endif %}
+                            
+
+                            {% endfor %}
+                        </ul>
+
+                    <script>
+                        
+                        function calcularPromedio(){
+                            var campo1 = document.getElementById("nota1").value;
+                            var campo2 = document.getElementById("nota2").value;
+                            var porcentaje1 = document.getElementById("per1").value;
+                            var porcentaje2 = document.getElementById("per2").value;
+                            var resultado = (parseFloat(campo1)*(porcentaje1/100))+(parseFloat(campo2)*(porcentaje2/100));
+                            
+                            document.getElementById("respuesta").innerHTML = "Tu nota es " + resultado;
+                            event.preventDefault();
+                            }
+                            
+                            function añadirCampo(){}
+                    </script>
+                </div>
+            </form>
+        </div>
+    </section>
+
+{% endblock content%}
+
